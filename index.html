@@ -3,90 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PowerLink Ghana 2050 | KPI Dashboard</title>
+    <title>PowerLink Ghana | Performance Dashboard</title>
     <style>
-        :root {
-            --trinity-purple: #4B0082;
-            --technosaints-yellow: #FFD700;
-            --white: #ffffff;
-            --light-grey: #f4f4f9;
-        }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--light-grey); margin: 0; padding: 20px; color: #333; }
-        .header { background-color: var(--trinity-purple); color: var(--technosaints-yellow); padding: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 5px solid var(--technosaints-yellow); }
-        .header h1 { margin: 0; font-size: 24px; }
-        .header p { margin: 5px 0 0; color: var(--white); font-weight: bold; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .card { background: var(--white); padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 4px solid var(--trinity-purple); text-align: center; }
-        .card h3 { margin: 0 0 10px; color: var(--trinity-purple); font-size: 16px; text-transform: uppercase; }
-        .card .value { font-size: 32px; font-weight: bold; color: #222; }
-        .card .unit { font-size: 14px; color: #666; }
-        .status-ready { color: #28a745; font-weight: bold; }
-        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #888; }
-        .logo-placeholder { font-style: italic; font-size: 10px; color: var(--technosaints-yellow); }
+        :root { --purple: #4B0082; --yellow: #FFD700; --bg: #ffffff; --text: #2d2d2d; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .header { background: var(--purple); color: var(--yellow); padding: 25px; border-radius: 12px 12px 0 0; border-bottom: 5px solid var(--yellow); display: flex; justify-content: space-between; align-items: center; }
+        .tabs { display: flex; background: #f4f4f4; border: 1px solid #ddd; border-top: none; }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; cursor: pointer; font-weight: bold; color: var(--purple); transition: 0.3s; }
+        .tab-btn.active { background: white; border-bottom: 3px solid var(--purple); }
+        .content { display: none; padding: 30px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 12px 12px; }
+        .content.active { display: block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { padding: 20px; border: 1px solid #eee; border-radius: 8px; text-align: center; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); }
+        .card h3 { font-size: 14px; color: #666; text-transform: uppercase; margin-bottom: 10px; }
+        .card .value { font-size: 36px; font-weight: 800; color: var(--purple); }
+        .card .unit { font-size: 12px; color: #999; font-weight: 600; margin-top: 5px; }
     </style>
 </head>
 <body>
-
     <div class="header">
-        <div>
-            <h1>PowerLink Ghana 2050</h1>
-            <p>Tamale–Savelugu Opportunity Corridor | Real-Time Systems Monitor</p>
-        </div>
-        <div class="logo-placeholder">
-            [TPS Seal] [TechnoSaints Fleur-de-lis] [Girls with Energy Logo]
-        </div>
+        <div><h1>PowerLink Ghana 2050</h1><p>Impact Monitoring Dashboard</p></div>
+        <div style="font-size: 10px; text-align: right;">[TPS Seal] [TechnoSaints Logo] [GWE Logo]</div>
+    </div>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'community')">Human Benefit</button>
+        <button class="tab-btn" onclick="openTab(event, 'resilience')">System Reliability</button>
+        <button class="tab-btn" onclick="openTab(event, 'growth')">Local Economy</button>
     </div>
 
-    <div class="grid">
-        <!-- RELIABILITY KPIs -->
-        <div class="card">
-            <h3>System Status</h3>
-            <div class="value status-ready">WAPP-READY</div>
-            <div class="unit">Grid-Connected & Islandable</div>
-        </div>
-        <div class="card">
-            <h3>Outage Hours Avoided</h3>
-            <div class="value">1,420</div>
-            <div class="unit">Cumulative Hours (Annual)</div>
-        </div>
-
-        <!-- EDUCATION & HEALTH KPIs -->
-        <div class="card" style="border-top-color: var(--technosaints-yellow);">
-            <h3>AI Learning Uptime</h3>
-            <div class="value">99.9%</div>
-            <div class="unit">School Digital Lab Availability</div>
-        </div>
-        <div class="card" style="border-top-color: var(--technosaints-yellow);">
-            <h3>Clinic Refrigeration</h3>
-            <div class="value">Active</div>
-            <div class="unit">Vaccine Cold-Chain Integrity</div>
-        </div>
-
-        <!-- AGRICULTURE & ECONOMY KPIs -->
-        <div class="card">
-            <h3>Crop Loss Reduction</h3>
-            <div class="value">22%</div>
-            <div class="unit">Farmer Income Saved</div>
-        </div>
-        <div class="card">
-            <h3>Local Jobs Created</h3>
-            <div class="value">85</div>
-            <div class="unit">Technicians & Operators Trained</div>
-        </div>
-
-        <!-- CLIMATE KPIs -->
-        <div class="card">
-            <h3>CO₂ Displaced</h3>
-            <div class="value">45,000</div>
-            <div class="unit">Metric Tonnes (Est.)</div>
-        </div>
-        <div class="card">
-            <h3>Renewable Mix</h3>
-            <div class="value">100%</div>
-            <div class="unit">Solar + BESS Priority Loads</div>
+    <div id="community" class="content active">
+        <div class="grid">
+            <div class="card"><h3>Clinic Uptime</h3><div class="value">100%</div><div class="unit">Critical Care Availability</div></div>
+            <div class="card"><h3>Digital Learning Hours</h3><div class="value">45,000+</div><div class="unit">Student Lab Sessions (Annual)</div></div>
+            <div class="card"><h3>Farmers Served</h3><div class="value">1,250</div><div class="unit">Corridor Hub Connections</div></div>
         </div>
     </div>
-
-    <div class="footer">
-        "Energy is access to opportunity." | TechnoSaints Nexus | Team 46 | Trinity Preparatory School
+    <div id="resilience" class="content">
+        <div class="grid">
+            <div class="card"><h3>Outage Hours Avoided</h3><div class="value">1,420</div><div class="unit">Cumulative System Resilience</div></div>
+            <div class="card"><h3>Diesel Reduced</h3><div class="value">18.5k</div><div class="unit">Gallons Displaced per Year</div></div>
+            <div class="card"><h3>Grid Status</h3><div class="value" style="color: green;">READY</div><div class="unit">Islandable & WAPP-Ready</div></div>
+        </div>
     </div>
+    <div id="growth" class="content">
+        <div class="grid">
+            <div class="card"><h3>Cold Storage Use</h3><div class="value">92%</div><div class="unit">Facility Capacity Utilization</div></div>
+            <div class="card"><h3>Local Jobs Created</h3><div class="value">85</div><div class="unit">Trained Technicians & Operators</div></div>
+        </div>
+    </div>
+    <script>
+        function openTab(evt, tabName) {
+            var i, x = document.getElementsByClassName("content"), btns = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < x.length; i++) { x[i].style.display = "none"; x[i].classList.remove("active"); }
+            for (i = 0; i < btns.length; i++) { btns[i].classList.remove("active"); }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
