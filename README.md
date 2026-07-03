@@ -1,4 +1,4 @@
-# ⚡ PowerLink Ghana 2050 | Performance Dashboard
+# PowerLink Ghana 2050 | Performance Dashboard
 **Team TechnoSaints Nexus (Team 46) | Trinity Preparatory School**  
 *2026 Siemens Energy "Girls with Energy" Challenge Submission*
 
