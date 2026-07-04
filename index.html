@@ -1,65 +1,961 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PowerLink Ghana | Performance Dashboard</title>
-    <style>
-        :root { --purple: #4B0082; --yellow: #FFD700; --bg: #ffffff; --text: #2d2d2d; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-        .header { background: var(--purple); color: var(--yellow); padding: 25px; border-radius: 12px 12px 0 0; border-bottom: 5px solid var(--yellow); display: flex; justify-content: space-between; align-items: center; }
-        .tabs { display: flex; background: #f4f4f4; border: 1px solid #ddd; border-top: none; }
-        .tab-btn { flex: 1; padding: 15px; border: none; background: none; cursor: pointer; font-weight: bold; color: var(--purple); transition: 0.3s; }
-        .tab-btn.active { background: white; border-bottom: 3px solid var(--purple); }
-        .content { display: none; padding: 30px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 12px 12px; }
-        .content.active { display: block; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .card { padding: 20px; border: 1px solid #eee; border-radius: 8px; text-align: center; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); }
-        .card h3 { font-size: 14px; color: #666; text-transform: uppercase; margin-bottom: 10px; }
-        .card .value { font-size: 36px; font-weight: 800; color: var(--purple); }
-        .card .unit { font-size: 12px; color: #999; font-weight: 600; margin-top: 5px; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <div><h1>PowerLink Ghana 2050</h1><p>Impact Monitoring Dashboard</p></div>
-        <div style="font-size: 10px; text-align: right;">[TPS Seal] [TechnoSaints Logo] [GWE Logo]</div>
-    </div>
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'community')">Human Benefit</button>
-        <button class="tab-btn" onclick="openTab(event, 'resilience')">System Reliability</button>
-        <button class="tab-btn" onclick="openTab(event, 'growth')">Local Economy</button>
-    </div>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PowerLink Ghana 2050 Command Center</title>
 
-    <div id="community" class="content active">
-        <div class="grid">
-            <div class="card"><h3>Clinic Uptime</h3><div class="value">100%</div><div class="unit">Critical Care Availability</div></div>
-            <div class="card"><h3>Digital Learning Hours</h3><div class="value">45,000+</div><div class="unit">Student Lab Sessions (Annual)</div></div>
-            <div class="card"><h3>Farmers Served</h3><div class="value">1,250</div><div class="unit">Corridor Hub Connections</div></div>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --text: #101828;
+      --muted: #667085;
+      --border: #e5e7eb;
+      --navy: #142033;
+      --green: #45c463;
+      --green-dark: #15803d;
+      --blue: #2563eb;
+      --cyan: #0891b2;
+      --yellow: #f59e0b;
+      --red: #dc2626;
+      --purple: #7c3aed;
+      --shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+    }
+
+    aside {
+      background: var(--navy);
+      color: white;
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      margin-bottom: 22px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--green);
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      font-weight: 900;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.15rem;
+      line-height: 1.1;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: #cbd5e1;
+      font-size: 0.76rem;
+    }
+
+    .tab-button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #f8fafc;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 7px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .tab-button:hover,
+    .tab-button.active {
+      background: var(--green);
+      color: white;
+    }
+
+    main {
+      padding: 30px 36px 70px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .topbar h2 {
+      margin: 0 0 8px;
+      font-size: 1.7rem;
+    }
+
+    .topbar p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .status {
+      background: #dcfce7;
+      color: #166534;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tab {
+      display: none;
+    }
+
+    .tab.active {
+      display: block;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .kpi-grid {
+      grid-template-columns: repeat(3, 1fr);
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .metric-card {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      min-height: 118px;
+    }
+
+    .icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.35rem;
+      flex: 0 0 auto;
+    }
+
+    .green { background: #dcfce7; color: #16a34a; }
+    .blue { background: #dbeafe; color: #2563eb; }
+    .yellow { background: #fef3c7; color: #d97706; }
+    .red { background: #fee2e2; color: #dc2626; }
+    .purple { background: #f3e8ff; color: #7c3aed; }
+    .cyan { background: #cffafe; color: #0891b2; }
+
+    .label {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 6px;
+    }
+
+    .value {
+      font-size: 1.55rem;
+      font-weight: 900;
+    }
+
+    .subtext {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-top: 5px;
+    }
+
+    .section-title {
+      margin: 32px 0 16px;
+    }
+
+    .section-title h3 {
+      margin: 0 0 6px;
+      font-size: 1.25rem;
+    }
+
+    .section-title p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .two-col {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .three-col {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .alert {
+      background: #fff7df;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+
+    .alert strong {
+      color: #92400e;
+    }
+
+    .alert p {
+      color: #b45309;
+      margin: 6px 0 0;
+    }
+
+    .progress-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .progress-item strong {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 0.92rem;
+      margin-bottom: 8px;
+    }
+
+    .bar {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      border-radius: 999px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      color: var(--muted);
+      background: #f8fafc;
+      padding: 14px 16px;
+      font-size: 0.84rem;
+    }
+
+    td {
+      border-top: 1px solid var(--border);
+      padding: 15px 16px;
+      vertical-align: top;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-purple { background: #f3e8ff; color: #6d28d9; }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .roadmap {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .phase-card {
+      color: white;
+      border-radius: 20px;
+      padding: 24px;
+      background: linear-gradient(145deg, #101828, #172033);
+      min-height: 520px;
+    }
+
+    .phase-card.pilot { border: 2px solid var(--purple); }
+    .phase-card.scale { border: 2px solid var(--green); }
+    .phase-card.sustain { border: 2px solid var(--yellow); }
+
+    .phase-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+
+    .phase-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      font-size: 1.25rem;
+    }
+
+    .phase-card h3 {
+      font-size: 1.8rem;
+      margin: 0 0 4px;
+    }
+
+    .phase-card h4 {
+      margin: 0 0 16px;
+      color: #facc15;
+      font-size: 1.05rem;
+    }
+
+    .phase-card ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .phase-card li {
+      margin: 10px 0;
+      line-height: 1.34;
+    }
+
+    .gate {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .gate strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #93c5fd;
+    }
+
+    .sdg-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .sdg {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .sdg strong {
+      color: var(--green-dark);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .mini-item strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .mini-item p {
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    svg {
+      width: 100%;
+      height: 260px;
+      display: block;
+    }
+
+    @media (max-width: 1100px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+        height: auto;
+      }
+
+      .kpi-grid,
+      .two-col,
+      .three-col,
+      .roadmap {
+        grid-template-columns: 1fr;
+      }
+
+      .sdg-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding: 22px 16px 50px;
+      }
+
+      .sdg-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        display: block;
+      }
+
+      .status {
+        display: inline-block;
+        margin-top: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div>
+          <h1>PowerLink Ghana</h1>
+          <p>2050 Command Center</p>
         </div>
-    </div>
-    <div id="resilience" class="content">
-        <div class="grid">
-            <div class="card"><h3>Outage Hours Avoided</h3><div class="value">1,420</div><div class="unit">Cumulative System Resilience</div></div>
-            <div class="card"><h3>Diesel Reduced</h3><div class="value">18.5k</div><div class="unit">Gallons Displaced per Year</div></div>
-            <div class="card"><h3>Grid Status</h3><div class="value" style="color: green;">READY</div><div class="unit">Islandable & WAPP-Ready</div></div>
+      </div>
+
+      <button class="tab-button active" data-tab="executive">⌂ Executive View</button>
+      <button class="tab-button" data-tab="reliability">⚡ Energy Reliability</button>
+      <button class="tab-button" data-tab="community">☷ Community Impact</button>
+      <button class="tab-button" data-tab="safety">🛡 Safety & Resilience</button>
+      <button class="tab-button" data-tab="finance">◎ Cost & Finance</button>
+      <button class="tab-button" data-tab="environment">♻ Environmental / SDG</button>
+      <button class="tab-button" data-tab="implementation">▣ Implementation Readiness</button>
+      <button class="tab-button" data-tab="roadmap">→ Roadmap</button>
+    </aside>
+
+    <main>
+      <section id="executive" class="tab active">
+        <div class="topbar">
+          <div>
+            <h2>Executive Command Center</h2>
+            <p>PowerLink Ghana 2050 | TechnoSaints Nexus | KPI-driven energy access strategy</p>
+          </div>
+          <div class="status">✓ Prototype Stable</div>
         </div>
-    </div>
-    <div id="growth" class="content">
-        <div class="grid">
-            <div class="card"><h3>Cold Storage Use</h3><div class="value">92%</div><div class="unit">Facility Capacity Utilization</div></div>
-            <div class="card"><h3>Local Jobs Created</h3><div class="value">85</div><div class="unit">Trained Technicians & Operators</div></div>
+
+        <div class="grid kpi-grid">
+          <div class="card metric-card">
+            <div class="icon green">⚡</div>
+            <div>
+              <div class="label">Critical Load Uptime</div>
+              <div class="value">95%</div>
+              <div class="subtext">Target for clinics, schools, water, and hub loads</div>
+            </div>
+          </div>
+
+          <div class="card metric-card">
+            <div class="icon blue">☷</div>
+            <div>
+              <div class="label">Community Uses Served</div>
+              <div class="value">4</div>
+              <div class="subtext">Clinic, school, water, enterprise hub</div>
+            </div>
+          </div>
+
+          <div class="card metric-card">
+            <div class="icon purple">▣</div>
+            <div>
+              <div class="label">Implementation Readiness</div>
+              <div class="value">72%</div>
+              <div class="subtext">Site, funding, permitting, procurement, O&M</div>
+            </div>
+          </div>
+
+          <div class="card metric-card">
+            <div class="icon yellow">$</div>
+            <div>
+              <div class="label">Funding Readiness</div>
+              <div class="value">65%</div>
+              <div class="subtext">Grant, DFI, public/private, local partner mix</div>
+            </div>
+          </div>
+
+          <div class="card metric-card">
+            <div class="icon red">🛡</div>
+            <div>
+              <div class="label">Safety Incidents Target</div>
+              <div class="value">0</div>
+              <div class="subtext">Zero major incidents during deployment and operations</div>
+            </div>
+          </div>
+
+          <div class="card metric-card">
+            <div class="icon cyan">♻</div>
+            <div>
+              <div class="label">SDG Alignment</div>
+              <div class="value">8 SDGs</div>
+              <div class="subtext">Health, education, water, energy, jobs, infrastructure, climate, partnerships</div>
+            </div>
+          </div>
         </div>
-    </div>
-    <script>
-        function openTab(evt, tabName) {
-            var i, x = document.getElementsByClassName("content"), btns = document.getElementsByClassName("tab-btn");
-            for (i = 0; i < x.length; i++) { x[i].style.display = "none"; x[i].classList.remove("active"); }
-            for (i = 0; i < btns.length; i++) { btns[i].classList.remove("active"); }
-            document.getElementById(tabName).style.display = "block";
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
-        }
-    </script>
+
+        <div class="alert">
+          <strong>Priority Recommendation</strong>
+          <p>Focus the pilot on a Northern Ghana resilience hub where solar + storage can support a clinic, school, water access, and productive-use loads while creating measurable community outcomes.</p>
+        </div>
+
+        <div class="grid two-col">
+          <div class="card">
+            <h3>2050 Progress Model</h3>
+            <p class="subtext">Pilot → Scale → Sustain, with KPI gates at each phase</p>
+
+            <svg viewBox="0 0 1000 260" preserveAspectRatio="none">
+              <line x1="40" y1="220" x2="980" y2="220" stroke="#cbd5e1" />
+              <line x1="40" y1="20" x2="40" y2="220" stroke="#cbd5e1" />
+              <g stroke="#e5e7eb" stroke-dasharray="4">
+                <line x1="40" y1="170" x2="980" y2="170" />
+                <line x1="40" y1="120" x2="980" y2="120" />
+                <line x1="40" y1="70" x2="980" y2="70" />
+              </g>
+              <polyline points="40,200 180,176 340,148 500,105 660,70 820,45 980,20" fill="none" stroke="#45c463" stroke-width="5" />
+              <g fill="#45c463">
+                <circle cx="40" cy="200" r="7" />
+                <circle cx="180" cy="176" r="7" />
+                <circle cx="340" cy="148" r="7" />
+                <circle cx="500" cy="105" r="7" />
+                <circle cx="660" cy="70" r="7" />
+                <circle cx="820" cy="45" r="7" />
+                <circle cx="980" cy="20" r="7" />
+              </g>
+              <g fill="#64748b" font-size="14">
+                <text x="32" y="244">2026</text>
+                <text x="165" y="244">2028</text>
+                <text x="325" y="244">2030</text>
+                <text x="485" y="244">2035</text>
+                <text x="645" y="244">2040</text>
+                <text x="805" y="244">2045</text>
+                <text x="955" y="244">2050</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="card">
+            <h3>KPI Category Health</h3>
+            <p class="subtext">Dashboard focus areas tied to judging strength</p>
+
+            <div class="progress-list">
+              <div class="progress-item">
+                <strong>Energy Reliability <span>82%</span></strong>
+                <div class="bar"><div class="fill" style="width:82%"></div></div>
+              </div>
+              <div class="progress-item">
+                <strong>Community Impact <span>78%</span></strong>
+                <div class="bar"><div class="fill" style="width:78%"></div></div>
+              </div>
+              <div class="progress-item">
+                <strong>Safety & Resilience <span>70%</span></strong>
+                <div class="bar"><div class="fill" style="width:70%"></div></div>
+              </div>
+              <div class="progress-item">
+                <strong>Cost & Finance <span>65%</span></strong>
+                <div class="bar"><div class="fill" style="width:65%"></div></div>
+              </div>
+              <div class="progress-item">
+                <strong>Implementation Readiness <span>72%</span></strong>
+                <div class="bar"><div class="fill" style="width:72%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="reliability" class="tab">
+        <div class="topbar">
+          <div>
+            <h2>Energy Reliability</h2>
+            <p>Measures whether the system delivers dependable electricity when and where it is needed.</p>
+          </div>
+          <div class="status">Target: ≥95% uptime</div>
+        </div>
+
+        <div class="grid kpi-grid">
+          <div class="card metric-card"><div class="icon green">✓</div><div><div class="label">Priority Load Uptime</div><div class="value">95%</div><div class="subtext">Clinic, school, water, hub loads</div></div></div>
+          <div class="card metric-card"><div class="icon blue">▭</div><div><div class="label">Battery Autonomy</div><div class="value">14 hrs</div><div class="subtext">Backup duration for critical loads</div></div></div>
+          <div class="card metric-card"><div class="icon yellow">↯</div><div><div class="label">Outage Hours Avoided</div><div class="value">320 hrs</div><div class="subtext">Annual projected avoided outage time</div></div></div>
+          <div class="card metric-card"><div class="icon cyan">☀</div><div><div class="label">Solar Output</div><div class="value">742 kW</div><div class="subtext">Prototype operating assumption</div></div></div>
+          <div class="card metric-card"><div class="icon purple">▣</div><div><div class="label">Load Served</div><div class="value">4 sectors</div><div class="subtext">Health, water, education, enterprise</div></div></div>
+          <div class="card metric-card"><div class="icon red">⚠</div><div><div class="label">Reliability Risk</div><div class="value">Medium</div><div class="subtext">Storage sizing and weather variability</div></div></div>
+        </div>
+
+        <div class="card">
+          <h3>Reliability Monitoring Table</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Load Type</th>
+                <th>Reliability Target</th>
+                <th>Monitoring Method</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Clinic cold storage and lighting</td><td>≥95% uptime</td><td>Voltage, battery reserve, outage logs</td><td><span class="badge badge-green">Priority</span></td></tr>
+              <tr><td>School lighting and devices</td><td>Evening study continuity</td><td>Energy served after sunset</td><td><span class="badge badge-blue">Tracked</span></td></tr>
+              <tr><td>Water pumping</td><td>Daily operating window</td><td>Pump runtime and battery reserve</td><td><span class="badge badge-yellow">Watch</span></td></tr>
+              <tr><td>Community enterprise loads</td><td>Productive-use availability</td><td>kWh delivered and user demand</td><td><span class="badge badge-blue">Tracked</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="community" class="tab">
+        <div class="topbar">
+          <div>
+            <h2>Community Impact</h2>
+            <p>Measures how energy access improves health, education, water access, and productive use.</p>
+          </div>
+          <div class="status">Impact-first strategy</div>
+        </div>
+
+        <div class="grid kpi-grid">
+          <div class="card metric-card"><div class="icon blue">☷</div><div><div class="label">Critical Uses Served</div><div class="value">4</div><div class="subtext">Clinic, school, water, enterprise</div></div></div>
+          <div class="card metric-card"><div class="icon green">🎓</div><div><div class="label">Schools Powered</div><div class="value">220</div><div class="subtext">Long-term scale scenario</div></div></div>
+          <div class="card metric-card"><div class="icon red">♡</div><div><div class="label">Clinics Powered</div><div class="value">140</div><div class="subtext">Long-term scale scenario</div></div></div>
+          <div class="card metric-card"><div class="icon cyan">💧</div><div><div class="label">Water Access</div><div class="value">Improved</div><div class="subtext">Pump uptime and storage reliability</div></div></div>
+          <div class="card metric-card"><div class="icon purple">✦</div><div><div class="label">Youth / Girls STEM Access</div><div class="value">Tracked</div><div class="subtext">Education and workforce pathway</div></div></div>
+          <div class="card metric-card"><div class="icon yellow">$</div><div><div class="label">Productive Use</div><div class="value">Enabled</div><div class="subtext">Small business and agriculture loads</div></div></div>
+        </div>
+
+        <div class="card">
+          <h3>Community Outcome Logic</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Community Need</th>
+                <th>Energy Intervention</th>
+                <th>Measured Outcome</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Clinic reliability</td><td>Solar + storage priority load</td><td>Clinic hours powered, cold-chain continuity</td></tr>
+              <tr><td>Education access</td><td>Evening lighting and device charging</td><td>Study hours added, school uptime</td></tr>
+              <tr><td>Water access</td><td>Reliable pump load support</td><td>Water system runtime and access reliability</td></tr>
+              <tr><td>Local economy</td><td>Productive-use energy allocation</td><td>Small business hours, agricultural support</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="safety" class="tab">
+        <div class="topbar">
+          <div>
+            <h2>Safety & Resilience</h2>
+            <p>Measures whether the system operates safely under heat, storms, outages, and user interaction.</p>
+          </div>
+          <div class="status">Target: zero major incidents</div>
+        </div>
+
+        <div class="grid kpi-grid">
+          <div class="card metric-card"><div class="icon green">✓</div><div><div class="label">Major Safety Incidents</div><div class="value">0</div><div class="subtext">Target through all phases</div></div></div>
+          <div class="card metric-card"><div class="icon red">⚠</div><div><div class="label">Open Risk Items</div><div class="value">3</div><div class="subtext">Mitigation plan required</div></div></div>
+          <div class="card metric-card"><div class="icon blue">▭</div><div><div class="label">Battery Temperature Alerts</div><div class="value">Tracked</div><div class="subtext">Thermal safety monitoring</div></div></div>
+          <div class="card metric-card"><div class="icon purple">🛡</div><div><div class="label">Protection Status</div><div class="value">Active</div><div class="subtext">Fusing, breakers, grounding, disconnects</div></div></div>
+          <div class="card metric-card"><div class="icon yellow">🔧</div><div><div class="label">Inspection Completion</div><div class="value">Monthly</div><div class="subtext">O&M and safety checklist</div></div></div>
+          <div class="card metric-card"><div class="icon cyan">☔</div><div><div class="label">Weather Resilience</div><div class="value">Medium</div><div class="subtext">Heat, dust, storms, seasonal rainfall</div></div></div>
+        </div>
+
+        <div class="grid two-col">
+          <div class="card">
+            <h3>Safety Controls</h3>
+            <div class="mini-list">
+              <div class="mini-item"><strong>Electrical Protection</strong><p>Overcurrent protection, disconnects, grounding, equipment labeling, and lockout practices.</p></div>
+              <div class="mini-item"><strong>Battery Safety</strong><p>Thermal monitoring, ventilation, charge limits, and safe enclosure design.</p></div>
+              <div class="mini-item"><strong>Community Safety</strong><p>Clear signage, restricted access to equipment, and local operator training.</p></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Resilience Controls</h3>
+            <div class="mini-list">
+              <div class="mini-item"><strong>Critical Load Prioritization</strong><p>Clinic, water, school, and hub loads are protected first during low battery reserve.</p></div>
+              <div class="mini-item"><strong>Spare Parts Planning</strong><p>Inventory strategy for fuses, wiring, controllers, sensors, and inverter support.</p></div>
+              <div class="mini-item"><strong>Escalation Path</strong><p>Local technician → vendor partner → utility or engineering support.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="finance" class="tab">
+        <div class="topbar">
+          <div>
+            <h2>Cost & Financial Viability</h2>
+            <p>Tracks capital cost, operating cost, affordability, and long-term sustainability.</p>
+          </div>
+          <div class="status">Fundable + scalable</div>
+        </div>
+
+        <div class="grid kpi-grid">
+          <div class="card metric-card"><div class="icon yellow">$</div><div><div class="label">CAPEX Readiness</div><div class="value">Estimated</div><div class="subtext">Solar, storage, controls, civil, installation</div></div></div>
+          <div class="card metric-card"><div class="icon blue">◎</div><div><div class="label">OPEX Plan</div><div class="value">Defined</div><div class="subtext">Maintenance, training, parts, monitoring</div></div></div>
+          <div class="card metric-card"><div class="icon green">↓</div><div><div class="label">Backup Cost Reduction</div><div class="value">≥20%</div><div class="subtext">Target vs. diesel or unreliable supply</div></div></div>
+          <div class="card metric-card"><div class="icon purple">▣</div><div><div class="label">Funding Readiness</div><div class="value">65%</div><div class="subtext">Blended capital pathway identified</div></div></div>
+          <div class="card metric-card"><div class="icon cyan">↻</div><div><div class="label">Maintenance Reserve</div><div class="value">Planned</div><div class="subtext">Sustain phase requirement</div></div></div>
+          <div class="card metric-card"><div class="icon red">⚠</div><div><div class="label">Funding Gap Risk</div><div class="value">Medium</div><div class="subtext">Requires partners and staged deployment</div></div></div>
+        </div>
+
+        <div class="card">
+          <h3>Financing Steps</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Examples</th>
+                <th>Gate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Grant pipeline</td><td>Climate funds, energy access grants, education and health-related funding</td><td><span class="badge badge-blue">Identify</span></td></tr>
+              <tr><td>Development finance</td><td>DFIs, concessional loans, AfDB-style funding pathways, public-private partnerships</td><td><span class="badge badge-yellow">Evaluate</span></td></tr>
+              <tr><td>Public/private partners</td><td>Government, utility, vendors, technology partners, schools, clinics</td><td><span class="badge badge-green">Engage</span></td></tr>
+              <tr><td>Local contribution</td><td>Land, labor, governance support, community operating committee, in-kind support</td><td><span class="badge badge-purple">Confirm</span></td></tr>
+              <tr><td>Long-term reserve</td><td>O&M reserve, battery replacement reserve, technology refresh reserve</td><td><span class="badge badge-red">Required</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="environment" class="tab">
+        <div class="topbar">
+          <div>
+            <h2>Environmental / SDG Impact</h2>
+            <p>Measures emissions avoided and alignment with Ghana’s development priorities.</p>
+          </div>
+          <div class="status">8 SDGs mapped</div>
+        </div>
+
+        <div class="grid kpi-grid">
+          <div class="card metric-card"><div class="icon green">♻</div><div><div class="label">CO₂ Avoided</div><div class="value">Tracked</div><div class="subtext">Monthly and annual estimate</div></div></div>
+          <div class="card metric-card"><div class="icon yellow">☀</div><div><div class="label">Renewable Share</div><div class="value">High</div><div class="subtext">Solar + storage priority</div></div></div>
+          <div class="card metric-card"><div class="icon red">↓</div><div><div class="label">Diesel Avoided</div><div class="value">Estimated</div><div class="subtext">Reduced backup fuel dependence</div></div></div>
+        </div>
+
+        <div class="grid sdg-grid">
+          <div class="sdg"><strong>SDG 3</strong>Health and Well-Being</div>
+          <div class="sdg"><strong>SDG 4</strong>Quality Education</div>
+          <div class="sdg"><strong>SDG 6</strong>Clean Water and Sanitation</div>
+          <div class="sdg"><strong>SDG 7</strong>Affordable and Clean Energy</div>
+          <div class="sdg"><strong>SDG 8</strong>Decent Work and Economic Growth</div>
+          <div class="sdg"><strong>SDG 9</strong>Industry, Innovation, and Infrastructure</div>
+          <div class="sdg"><strong>SDG 13</strong>Climate Action</div>
+          <div class="sdg"><strong>SDG 17</strong>Partnerships for the Goals</div>
+        </div>
+      </section>
+
+      <section id="implementation" class="tab">
+        <div class="topbar">
+          <div>
+            <h2>Implementation Readiness</h2>
+            <p>Tracks permitting, procurement, training, maintenance, partnerships, and deployment status.</p>
+          </div>
+          <div class="status">Judge-ready realism</div>
+        </div>
+
+        <div class="grid kpi-grid">
+          <div class="card metric-card"><div class="icon blue">⌖</div><div><div class="label">Site Assessment</div><div class="value">85%</div><div class="subtext">Community and load model defined</div></div></div>
+          <div class="card metric-card"><div class="icon yellow">▤</div><div><div class="label">Permitting Path</div><div class="value">In Progress</div><div class="subtext">Environmental, utility, local authority</div></div></div>
+          <div class="card metric-card"><div class="icon green">🛒</div><div><div class="label">Equipment Procurement</div><div class="value">Planned</div><div class="subtext">PV, batteries, controls, interconnection gear</div></div></div>
+          <div class="card metric-card"><div class="icon purple">👥</div><div><div class="label">Training Plan</div><div class="value">Defined</div><div class="subtext">Local operators and technicians</div></div></div>
+          <div class="card metric-card"><div class="icon cyan">🔧</div><div><div class="label">O&M Model</div><div class="value">Drafted</div><div class="subtext">Inspection, spares, escalation, reserve funding</div></div></div>
+          <div class="card metric-card"><div class="icon red">⚠</div><div><div class="label">Risk Register</div><div class="value">Active</div><div class="subtext">Funding, permitting, supply chain, safety</div></div></div>
+        </div>
+
+        <div class="card">
+          <h3>Implementation Milestone Tracker</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Milestone</th>
+                <th>Sub-Examples</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Site + load validation</td><td>Priority loads, peak demand, battery autonomy, community use cases</td><td><span class="badge badge-green">Advanced</span></td></tr>
+              <tr><td>Financing package</td><td>Grants, DFIs, concessional loans, government/utility, vendors, local contribution</td><td><span class="badge badge-yellow">In Progress</span></td></tr>
+              <tr><td>Permitting</td><td>Environmental review, utility interconnection, local authority, land/right-of-way</td><td><span class="badge badge-yellow">In Progress</span></td></tr>
+              <tr><td>Equipment procurement</td><td>PV panels, batteries, inverters, controllers, monitoring sensors, safety equipment</td><td><span class="badge badge-blue">Planned</span></td></tr>
+              <tr><td>Contracting + construction</td><td>RFP, contractor selection, BoQ, schedule, QA/QC, HSE plan</td><td><span class="badge badge-blue">Planned</span></td></tr>
+              <tr><td>Operations + maintenance</td><td>Training, inspection schedule, spare parts, maintenance reserve, technology refresh</td><td><span class="badge badge-purple">Defined</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="roadmap" class="tab">
+        <div class="topbar">
+          <div>
+            <h2>Roadmap to PowerLink Ghana 2050</h2>
+            <p>Maintains the required 0–3, 3–10, and 10+ year structure with realistic planning gates.</p>
+          </div>
+        </div>
+
+        <div class="grid roadmap">
+          <article class="phase-card pilot">
+            <div class="phase-head"><span class="phase-num">1</span> 0–3 Years</div>
+            <h3>Pilot</h3>
+            <h4>Prove the Model</h4>
+            <ul>
+              <li>Finalize site selection and load assessment</li>
+              <li>Voice of Customer and stakeholder alignment</li>
+              <li>Financing package design: grants, DFIs, local partners</li>
+              <li>Permitting path: environmental, utility, local authority</li>
+              <li>Equipment procurement plan: PV, batteries, controls, interconnection gear</li>
+              <li>Contractor selection and implementation schedule</li>
+              <li>Baseline KPI dashboard and risk register</li>
+            </ul>
+            <div class="gate">
+              <strong>Milestone Gates</strong>
+              <ul>
+                <li>Feasibility approved</li>
+                <li>Funding commitments secured</li>
+                <li>Major permits submitted or in process</li>
+                <li>First hub procurement released</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="phase-card scale">
+            <div class="phase-head"><span class="phase-num">2</span> 3–10 Years</div>
+            <h3>Scale</h3>
+            <h4>Replicate What Works</h4>
+            <ul>
+              <li>Expand to additional schools, clinics, and water assets</li>
+              <li>Phase 2 financing: blended capital, concessional debt, reinvested savings</li>
+              <li>Bulk equipment procurement to reduce unit cost</li>
+              <li>Standardize designs, BoQ, and contractor packages</li>
+              <li>Workforce pipeline and local technician training</li>
+              <li>Strengthen O&M model, spare parts, and service contracts</li>
+              <li>KPI-driven improvement across new sites</li>
+            </ul>
+            <div class="gate">
+              <strong>Milestone Gates</strong>
+              <ul>
+                <li>Multiple hubs commissioned</li>
+                <li>Cost per site reduced</li>
+                <li>O&M program operational</li>
+                <li>Regional deployment model validated</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="phase-card sustain">
+            <div class="phase-head"><span class="phase-num">3</span> 10+ Years</div>
+            <h3>Sustain</h3>
+            <h4>Build Long-Term Energy Independence</h4>
+            <ul>
+              <li>Transition to community-led ownership and governance</li>
+              <li>Establish maintenance reserve and replacement planning</li>
+              <li>Long-term tariff, revenue, and financial sustainability review</li>
+              <li>Technology refresh cycles for batteries, inverters, and monitoring</li>
+              <li>Continued compliance, audits, and resilience upgrades</li>
+              <li>Expand corridor-to-region strategy using proven model</li>
+              <li>Use dashboard evidence to attract next-wave investment</li>
+            </ul>
+            <div class="gate">
+              <strong>Milestone Gates</strong>
+              <ul>
+                <li>Long-term reserve funded</li>
+                <li>Local ownership active</li>
+                <li>Technology refresh planned</li>
+                <li>Expansion pipeline financed</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll(".tab-button");
+    const tabs = document.querySelectorAll(".tab");
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const tabName = button.dataset.tab;
+
+        buttons.forEach(btn => btn.classList.remove("active"));
+        tabs.forEach(tab => tab.classList.remove("active"));
+
+        button.classList.add("active");
+        document.getElementById(tabName).classList.add("active");
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  </script>
 </body>
 </html>
